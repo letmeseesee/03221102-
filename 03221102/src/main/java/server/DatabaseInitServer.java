@@ -55,7 +55,7 @@ public class DatabaseInitServer {
 //            "  PRIMARY KEY (`id`) USING BTREE,\n" +
 //            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='银行账户';";
 
-    private static String flow = "CREATE TABLE `demo_user_account_flow` (\n" +
+    private static String flow = "CREATE TABLE `demo_user_flow` (\n" +
             "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
             "  `account_id` varchar(50) NOT NULL COMMENT '用户ID',\n" +
             "  `type` varchar(50) NOT NULL COMMENT '1 存钱 2 取钱',\n" +

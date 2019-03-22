@@ -2,6 +2,7 @@ package server.business;
 
 import config.Config;
 import facade.vo.User;
+import org.apache.commons.lang3.StringUtils;
 import util.RowMapper;
 import util.SqliteHelper;
 
@@ -16,8 +17,6 @@ public class UserServer {
     private SqliteHelper sqliteHelper ;
 
     private String dbUserName = "demo_user";
-    private String dbUserAccountName = "demo_user";
-    private String dbUserFlow = "demo_user";
 
     public UserServer(){
         try {
@@ -86,5 +85,10 @@ public class UserServer {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public Boolean validate(User user){
+        User dbUser = this.getUser(user.getId());
+        return StringUtils.equals(dbUser.getUserPassword(),user.getUserPassword());
     }
 }
