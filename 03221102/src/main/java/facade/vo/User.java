@@ -13,4 +13,6 @@ public class User {
     private String userAddress;
     private String userPhone;
     private Integer isAdmin;
+    private Integer money;
+    private Integer charge;
 }

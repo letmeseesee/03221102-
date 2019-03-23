@@ -37,12 +37,15 @@ import util.SqliteHelper;
  * @author  阿尔卑斯狗 2019-3-22 初始化数据库
  */
 public class DatabaseInitServer {
+    final static Logger logger = LoggerFactory.getLogger(DatabaseInitServer.class);
+
     private static String user = "CREATE TABLE `demo_user` (\n" +
             "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
             "  `user_name` varchar(50) NOT NULL COMMENT '用户名',\n" +
             "  `user_password` varchar(50) NOT NULL COMMENT '用户密码',\n" +
             "  `user_address` varchar(50) NOT NULL COMMENT '用户地址'\n"+
             "  `user_phone` varchar(50) NOT NULL COMMENT '用户电话'\n"+
+            "  `money` INT(50) NOT NULL default 0 COMMENT '余额'\n"+
             "  `user_status` tinyint(4) NOT NULL default 1 COMMENT '状态 启用 非启用',\n" +
             "  `is_admin` tinyint(4) NOT NULL default 0 COMMENT '是否管理员',\n" +
             "  PRIMARY KEY (`id`) USING BTREE,\n" +
@@ -64,8 +67,6 @@ public class DatabaseInitServer {
             "  PRIMARY KEY (`id`) USING BTREE,\n" +
             ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='银行账户';";
 
-
-    final static Logger logger = LoggerFactory.getLogger(SqliteHelper.class);
 
     public static Boolean init(){
         logger.info("初始化数据。。。");

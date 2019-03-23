@@ -3,6 +3,8 @@ package server.business;
 import config.Config;
 import facade.vo.User;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.RowMapper;
 import util.SqliteHelper;
 
@@ -14,6 +16,8 @@ import java.util.List;
  * @author 阿尔卑斯狗 2019-3-22 用户操作
  */
 public class UserServer {
+    final static Logger logger = LoggerFactory.getLogger(UserServer.class);
+
     private SqliteHelper sqliteHelper ;
 
     private String dbUserName = "demo_user";
@@ -75,7 +79,7 @@ public class UserServer {
                     User userSelected = new User();
                     userSelected.setUserName(rs.getString("user_name"));
                     userSelected.setUserAddress(rs.getString("user_address"));
-                    userSelected.setUserPhone(rs.getNString("user_phone"));
+                    userSelected.setUserPhone(rs.getString("user_phone"));
                     userSelected.setIsAdmin(rs.getInt("is_admin"));
                     return userSelected;
                 }
