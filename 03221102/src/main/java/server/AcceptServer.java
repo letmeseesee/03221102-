@@ -4,27 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.business.ChargeServer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends Thread
+public class AcceptServer extends Thread
 {
     final static Logger logger = LoggerFactory.getLogger(ChargeServer.class);
 
     ServerSocket server = null;
     Socket sk = null;
-    BufferedReader rdr = null;
-    PrintWriter wtr = null;
 
-    public Server()
+    public AcceptServer()
     {
         try
         {
-            server = new ServerSocket(1987);
+            server = new ServerSocket(8888,5);
         }
         catch (IOException e)
         {
@@ -32,9 +27,9 @@ public class Server extends Thread
         }
     }
 
+    @Override
     public void run()
     {
-
         while (true)
         {
             System.out.println("接收请求中...");
@@ -51,5 +46,4 @@ public class Server extends Thread
             }
         }
     }
-
 }

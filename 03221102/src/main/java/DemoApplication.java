@@ -33,8 +33,7 @@
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.DatabaseInitServer;
-import server.HttpServer;
-import util.SqliteHelper;
+import server.AcceptServer;
 
 /**
  * @author 阿尔卑斯狗 2019-3-22 服务端程序入口
@@ -50,8 +49,8 @@ public class DemoApplication {
             return;
         }
         //等待连接请求
-        HttpServer server = new HttpServer();
-        server.run();
+        AcceptServer acceptServer = new AcceptServer();
+        acceptServer.start();
         //结束
         logger.info("服务端程序关闭");
     }

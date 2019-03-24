@@ -10,7 +10,6 @@ import util.SqliteHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * @author 阿尔卑斯狗 2019-3-22 用户操作
@@ -32,7 +31,7 @@ public class UserServer {
 
     /**
      * 添加用户
-     * @param user
+     * @param User
      * @return
      */
     public Boolean addUser(User user){
@@ -51,12 +50,12 @@ public class UserServer {
 
     /**
      * 删除用户
-     * @param UserId
+     * @param User
      * @return
      */
-    public Boolean delUser(Integer UserId){
+    public Boolean delUser(User user){
         try {
-            String delUserSql = String.format("delete from "+dbUserName+" where id =  %s",UserId);
+            String delUserSql = String.format("delete from "+dbUserName+" where id =  %s",user.getId());
             Integer effectRows = sqliteHelper.executeUpdate(delUserSql);
             return (effectRows  > 0);
         }catch (Exception e){
@@ -66,13 +65,13 @@ public class UserServer {
 
     /**
      * 获取用户信息
-     * @param userId 用户ID
-     * @return
+     * @param user 用户
+     * @return User
      */
-    public User getUser(Integer userId){
+    public User getUser(User user){
         try {
-            String selelctUserSql = String.format("selelct *  from "+dbUserName+" where id =  %s",userId);
-            User user = sqliteHelper.executeQuery(selelctUserSql,new RowMapper<User>(){
+            String selelctUserSql = String.format("selelct *  from "+dbUserName+" where id =  %s",user.getId());
+            User userR = sqliteHelper.executeQuery(selelctUserSql,new RowMapper<User>(){
                 @Override
                 public User mapRow(ResultSet rs, int index)
                         throws SQLException {
@@ -84,15 +83,14 @@ public class UserServer {
                     return userSelected;
                 }
             }).get(0);
-
-            return user;
+            return userR;
         }catch (Exception e){
             return null;
         }
     }
 
     public Boolean validate(User user){
-        User dbUser = this.getUser(user.getId());
+        User dbUser = this.getUser(user);
         return StringUtils.equals(dbUser.getUserPassword(),user.getUserPassword());
     }
 }
