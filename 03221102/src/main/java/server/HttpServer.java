@@ -40,10 +40,12 @@ public class HttpServer extends Thread {
             Request request = parseObject(clientInputStr, Request.class);
             // 向客户端回复信息
             PrintStream out = new PrintStream(socket.getOutputStream());
-            String result = null;
             //System.out.print("请输入:\t");
             // 发送键盘输入的一行
             //String s = new BufferedReader(new InputStreamReader(System.in)).readLine();
+            DispatchServer dispatchServer = new DispatchServer();
+            String result = dispatchServer.handle(request);
+            logger.info("服务端返回的内容:" + result);
             out.println(result);
 
             out.close();

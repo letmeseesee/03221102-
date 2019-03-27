@@ -1,8 +1,8 @@
 package server.business;
 
 import config.Config;
+import facade.vo.Flow;
 import facade.vo.User;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.RowMapper;
@@ -10,6 +10,8 @@ import util.SqliteHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author 阿尔卑斯狗 2019-3-22 存取款
@@ -74,6 +76,35 @@ public class ChargeServer {
         }catch (Exception e){
             logger.warn("用户{}{}失败",user.getUserName(),msg);
             return false;
+        }
+    }
+
+    /**
+     * 流水
+     * @param user 用户
+     * @return List
+     */
+    public List<Flow> getFlow(User user){
+        String selelctFlowSql = String.format("select *  from "+dbUserFlow+" where account_id =  %d order by id desc limit 10 ",user.getId());
+        List<Flow> flowList ;
+        try {
+            flowList =  sqliteHelper.executeQuery(selelctFlowSql, new RowMapper<Flow>() {
+                @Override
+                public Flow mapRow(ResultSet rs, int index)
+                        throws SQLException {
+                    Flow flow = new Flow();
+                    flow.setId(rs.getInt("id"));
+                    flow.setAccountId(rs.getInt("account_id"));
+                    flow.setType(rs.getInt("type"));
+                    flow.setCharge(rs.getInt("charge"));
+                    flow.setMoney(rs.getInt("money"));
+                    return flow;
+                }
+            });
+            return flowList;
+        }catch (Exception e){
+            logger.warn(e.getMessage());
+            return null;
         }
     }
 }

@@ -1,11 +1,15 @@
 package server;
 
 import com.alibaba.fastjson.JSON;
+import facade.vo.Flow;
 import facade.vo.Reponse.Reponse;
 import facade.vo.User;
 import facade.vo.request.Request;
 import server.business.ChargeServer;
 import server.business.UserServer;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author 2019-3-24 分发请求
@@ -22,9 +26,10 @@ public class DispatchServer {
         Boolean result;
         switch (target){
             case "addUser":
-                result = userServer.addUser(requestUser);
-                if(result){
+                User lastInsertUser = userServer.addUser(requestUser);
+                if(lastInsertUser !=null){
                     reponseObject.setCode(0);
+                    reponseObject.setUser(lastInsertUser);
                 }else {
                     reponseObject.setCode(1);
                 }
@@ -50,6 +55,15 @@ public class DispatchServer {
                 result = chargeServer.saveMoney(requestUser,chargeType);
                 if(result){
                     reponseObject.setCode(0);
+                }else {
+                    reponseObject.setCode(1);
+                }
+                break;
+            case "getFlow":
+                List<Flow> flowList = chargeServer.getFlow(requestUser);
+                if(flowList != null){
+                    reponseObject.setCode(0);
+                    reponseObject.setUserFlows(flowList);
                 }else {
                     reponseObject.setCode(1);
                 }

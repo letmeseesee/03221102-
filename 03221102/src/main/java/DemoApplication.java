@@ -29,11 +29,14 @@
  *                   别人笑我忒疯癫，我笑自己命太贱；
  *                   不见满街漂亮妹，哪个归得程序员？
  */
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import server.DatabaseInitServer;
 import server.AcceptServer;
+import server.DatabaseInitServer;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author 阿尔卑斯狗 2019-3-22 服务端程序入口
@@ -43,15 +46,29 @@ public class DemoApplication {
 
     public static void main(String[] args) {
         logger.info("服务端程序启动中。。。");
+
+        try {
+             System.out.println("服务器IP : " +
+             InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
         //数据初始化
         Boolean dataInitResult = DatabaseInitServer.init();
         if(!dataInitResult){
             return;
         }
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
         //等待连接请求
         AcceptServer acceptServer = new AcceptServer();
         acceptServer.start();
         //结束
+        try {
+            countDownLatch.await();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         logger.info("服务端程序关闭");
     }
 }

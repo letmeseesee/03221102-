@@ -31,20 +31,32 @@ public class UserServer {
 
     /**
      * 添加用户
-     * @param User
-     * @return
+     * @param User 用户
+     * @return user
      */
-    public Boolean addUser(User user){
+    public User addUser(User user){
         try {
             //创建主表数据
-            String addUserSql = String.format("insert into "+dbUserName+"(user_name,user_password,is_admin,user_address,user_phone) " +
-                    "values(%S,%S,%S,%S,%S)",user.getUserName(),user.getUserPassword(),user.getIsAdmin(),user.getUserAddress(),user.getUserPhone());
+            int userId = sqliteHelper.getLastInsetId(dbUserName);
+            logger.info(userId + "");
+            userId = userId>0?userId:1;
+            userId++;
+            String addUserSql = String.format("insert into "+dbUserName+"(id,user_name,user_password,is_admin,user_address,user_phone) " +
+                    "values(%s,'%s','%s',%s,'%s',%s)",userId,user.getUserName(),user.getUserPassword(),0,user.getUserAddress(),user.getUserPhone());
 
+            logger.info(addUserSql);
             Integer effectRows = sqliteHelper.executeUpdate(addUserSql);
-
-            return (effectRows  > 0);
+            logger.info(effectRows + "");
+            if(effectRows  > 0){
+                User lastInsertUser = new User();
+                lastInsertUser.setId(userId);
+                return this.getUserByID(lastInsertUser);
+            }else {
+                return null;
+            }
         }catch (Exception e){
-            return false;
+            logger.info(e.getMessage());
+            return null;
         }
     }
 
@@ -68,14 +80,16 @@ public class UserServer {
      * @param user 用户
      * @return User
      */
-    public User getUser(User user){
+    public User getUserByID(User user){
         try {
-            String selelctUserSql = String.format("selelct *  from "+dbUserName+" where id =  %s",user.getId());
+            String selelctUserSql = String.format("select * from "+dbUserName+" where id =  %s",user.getId());
+            logger.info(selelctUserSql);
             User userR = sqliteHelper.executeQuery(selelctUserSql,new RowMapper<User>(){
                 @Override
                 public User mapRow(ResultSet rs, int index)
                         throws SQLException {
                     User userSelected = new User();
+                    userSelected.setId(rs.getInt("id"));
                     userSelected.setUserName(rs.getString("user_name"));
                     userSelected.setUserAddress(rs.getString("user_address"));
                     userSelected.setUserPhone(rs.getString("user_phone"));
@@ -85,6 +99,38 @@ public class UserServer {
             }).get(0);
             return userR;
         }catch (Exception e){
+            logger.info(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 获取用户信息
+     * @param user 用户
+     * @return User
+     */
+    public User getUser(User user){
+        try {
+            String selelctUserSql = String.format("select * from "+dbUserName+" where user_name = '%s' and user_password = '%s'",
+                    user.getUserName(),user.getUserPassword());
+            logger.info(selelctUserSql);
+            User userR = sqliteHelper.executeQuery(selelctUserSql,new RowMapper<User>(){
+                @Override
+                public User mapRow(ResultSet rs, int index)
+                        throws SQLException {
+                    User userSelected = new User();
+                    userSelected.setId(rs.getInt("id"));
+                    userSelected.setUserName(rs.getString("user_name"));
+                    userSelected.setUserAddress(rs.getString("user_address"));
+                    userSelected.setUserPhone(rs.getString("user_phone"));
+                    userSelected.setIsAdmin(rs.getInt("is_admin"));
+                    userSelected.setMoney(rs.getInt("money"));
+                    return userSelected;
+                }
+            }).get(0);
+            return userR;
+        }catch (Exception e){
+            logger.info(e.getMessage());
             return null;
         }
     }

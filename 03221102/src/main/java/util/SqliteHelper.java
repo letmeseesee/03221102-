@@ -96,7 +96,7 @@ public class SqliteHelper {
     public Integer getLastInsetId(String dbName){
         Integer lastInsertId = 0;
         try {
-            lastInsertId = executeQuery("select last_insert_rowid() from "+dbName, new RowMapper<Integer>() {
+            lastInsertId = executeQuery("select id from "+dbName+" order by id desc limit 1", new RowMapper<Integer>() {
                 @Override
                 public Integer mapRow(ResultSet rs, int index)
                         throws SQLException {

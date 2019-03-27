@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.SqliteHelper;
 
+import java.io.File;
+
 /**
  * CREATE TABLE `demo_user` (
  *   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,16 +42,15 @@ public class DatabaseInitServer {
     final static Logger logger = LoggerFactory.getLogger(DatabaseInitServer.class);
 
     private static String user = "CREATE TABLE `demo_user` (\n" +
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
-            "  `user_name` varchar(50) NOT NULL COMMENT '用户名',\n" +
-            "  `user_password` varchar(50) NOT NULL COMMENT '用户密码',\n" +
-            "  `user_address` varchar(50) NOT NULL COMMENT '用户地址'\n"+
-            "  `user_phone` varchar(50) NOT NULL COMMENT '用户电话'\n"+
-            "  `money` INT(50) NOT NULL default 0 COMMENT '余额'\n"+
-            "  `user_status` tinyint(4) NOT NULL default 1 COMMENT '状态 启用 非启用',\n" +
-            "  `is_admin` tinyint(4) NOT NULL default 0 COMMENT '是否管理员',\n" +
-            "  PRIMARY KEY (`id`) USING BTREE,\n" +
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='用户表';\n";
+            "  `id` int(11) PRIMARY KEY,\n" +
+            "  `user_name` varchar(50) NOT NULL,\n" +
+            "  `user_password` varchar(50) NOT NULL,\n" +
+            "  `user_address` varchar(50) NOT NULL,\n"+
+            "  `user_phone` varchar(50) NOT NULL,\n"+
+            "  `money` INT(50) NOT NULL default 0,\n"+
+            "  `user_status` tinyint(4) NOT NULL default 1,\n" +
+            "  `is_admin` tinyint(4) NOT NULL default 0\n" +
+            ");\n";
 
 //    private static String account = "CREATE TABLE `demo_user_account` (\n" +
 //            "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
@@ -59,18 +60,21 @@ public class DatabaseInitServer {
 //            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='银行账户';";
 
     private static String flow = "CREATE TABLE `demo_user_flow` (\n" +
-            "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
-            "  `account_id` varchar(50) NOT NULL COMMENT '用户ID',\n" +
-            "  `type` varchar(50) NOT NULL COMMENT '1 存钱 2 取钱',\n" +
-            "  `charge` INT(50) NOT NULL COMMENT '存取金额',\n" +
-            "  `money` INT(50) NOT NULL COMMENT '余额',\n" +
-            "  PRIMARY KEY (`id`) USING BTREE,\n" +
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='银行账户';";
+            "  `id` int(11) PRIMARY KEY,\n" +
+            "  `account_id` varchar(50) NOT NULL,\n" +
+            "  `type` varchar(50) NOT NULL,\n" +
+            "  `charge` INT(50) NOT NULL,\n" +
+            "  `money` INT(50) NOT NULL\n" +
+            ");";
 
 
     public static Boolean init(){
         logger.info("初始化数据。。。");
         try {
+            File dbfile = new File(Config.dbfile);
+            if(dbfile.exists()){
+                return true;
+            }
             SqliteHelper sqliteHelper = new SqliteHelper(Config.dbfile);
             sqliteHelper.executeUpdate(DatabaseInitServer.user);
             sqliteHelper.executeUpdate(DatabaseInitServer.flow);
