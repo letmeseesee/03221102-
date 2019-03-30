@@ -42,11 +42,8 @@ import java.util.concurrent.CountDownLatch;
  * @author 阿尔卑斯狗 2019-3-22 服务端程序入口
  */
 public class DemoApplication {
-    final static Logger logger = LoggerFactory.getLogger(DemoApplication.class);
-
     public static void main(String[] args) {
-        logger.info("服务端程序启动中。。。");
-
+        System.out.println("服务端程序启动中。。。");
         try {
              System.out.println("服务器IP : " +
              InetAddress.getLocalHost().getHostAddress());
@@ -69,6 +66,6 @@ public class DemoApplication {
         }catch (Exception e){
             e.printStackTrace();
         }
-        logger.info("服务端程序关闭");
+        System.out.println("服务端程序关闭");
     }
 }
