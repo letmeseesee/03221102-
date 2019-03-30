@@ -35,7 +35,9 @@ public class ChargeServer {
         userR.setMoney(user.getMoney());
 
         //添加流水数据
+        Integer flowId = dataHelper.getNewId();
         Flow flow = new Flow();
+        flow.setId(flowId);
         flow.setMoney(user.getMoney());
         flow.setCharge(user.getCharge());
         flow.setType(type);
